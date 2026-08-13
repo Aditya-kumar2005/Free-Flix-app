@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    image: openjdk:21-jdk
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/freeflix-backend-0.0.1-SNAPSHOT.jar:/app/freeflix.jar:ro
+    working_dir: /app
+    command: ["java", "-jar", "freeflix.jar", "--spring.data.mongodb.uri=mongodb+srv://nanuadityakumar_db_user:84fhf848f494fj9j4jj48gj@cluster0.b2hlhnt.mongodb.net/movie-app-db"]
+
+volumes:
+  mongo_data:
